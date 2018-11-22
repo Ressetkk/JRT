@@ -49,9 +49,9 @@ public class MainWindowController {
     private void createTerminalWindow () throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/TerminalWindow.fxml"));
         Stage terminalStage = new Stage();
-        loader.setController(new TerminalWindow(
+        loader.setController(new TerminalWindowController(
                 terminalStage,
-                new String[] {selectedShell, "-l"})
+                selectedShell)
         );
 
         Parent terminalRoot = loader.load();
