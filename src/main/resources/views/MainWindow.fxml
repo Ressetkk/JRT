@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="292.0" prefWidth="569.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.resset.jrt.MainWindowController">
+   <children>
+      <ImageView fitHeight="67.0" fitWidth="569.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="30.0" layoutY="14.0" stylesheets="@../css/bootstrap3.css" text="Label">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="30.0" layoutY="82.0" AnchorPane.bottomAnchor="30.0">
+         <children>
+            <Button fx:id="connectButton" layoutX="414.0" layoutY="101.5" minHeight="30.0" mnemonicParsing="false" onMouseClicked="#createSession" prefHeight="32.0" prefWidth="95.0" text="Connect">
+               <styleClass>
+                  <String fx:value="button" />
+                  <String fx:value="success" />
+               </styleClass>
+            </Button>
+            <TextField layoutX="309.0" layoutY="8.5" prefWidth="200.0" promptText="Partner ID" />
+            <TextField layoutX="309.0" layoutY="51.5" prefWidth="200.0" promptText="Pass" />
+            <TextField editable="false" layoutY="11.5" prefWidth="200.0" promptText="Your ID" />
+            <TextField editable="false" layoutY="54.5" prefWidth="200.0" promptText="Your Pass" />
+            <Line endX="5.0" layoutX="250.5" startX="5.0" startY="144.0" style="-fx-stroke-width: .15;" />
+            <MenuButton fx:id="selectShellMenu" layoutX="309.0" layoutY="100.5" minHeight="32.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="95.0" styleClass="split-menu-button" text="bash">
+               <items>
+                  <MenuItem fx:id="bashMenuItem" mnemonicParsing="true" text="bash" />
+                  <MenuItem fx:id="shMenuItem" mnemonicParsing="true" text="sh" />
+                  <MenuItem fx:id="zshMenuItem" mnemonicParsing="true" text="zsh" />
+               </items>
+            </MenuButton>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

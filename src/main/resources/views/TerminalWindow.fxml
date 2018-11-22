@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+
+
+<TextArea fx:id="shellArea" prefHeight="480.0" prefWidth="800.0" styleClass="text-area" stylesheets="@../css/bootstrap3.css" wrapText="true" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" />

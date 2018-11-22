@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id "de.inetsoftware.appbundler" version "4.8.5"
+}
+
+apply plugin: 'com.google.osdetector'
+
+group 'org.resset'
+version '1.0-SNAPSHOT'
+
+ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+// TODO add multiplatform build for release options
+dependencies {
+    compile 'org.jetbrains.pty4j:purejavacomm:0.0.11.1'
+    compile 'org.jetbrains.pty4j:pty4j:0.8.5'
+    compile "org.openjfx:javafx-base:11.0.1:$platform"
+    compile "org.openjfx:javafx-graphics:11.0.1:$platform"
+    compile "org.openjfx:javafx-controls:11.0.1:$platform"
+    compile "org.openjfx:javafx-fxml:11.0.1:$platform"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+mainClassName = 'com.resset.jrt.Main'
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.fxml,javafx.controls',
+
+        ]
+    }
+}
+
+run {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.fxml,javafx.controls',
+        ]
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.resset.jrt.Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
