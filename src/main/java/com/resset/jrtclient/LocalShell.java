@@ -1,4 +1,4 @@
-package com.resset.jrt;
+package com.resset.jrtclient;
 
 import com.google.common.base.Charsets;
 import com.pty4j.PtyProcess;

@@ -1,4 +1,4 @@
-package com.resset.jrt;
+package com.resset.jrtclient;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

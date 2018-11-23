@@ -1,4 +1,4 @@
-package com.resset.jrt;
+package com.resset.jrtclient;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -7,17 +7,14 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class Shell {
-    private WebView shellWindow;
-
     private final ObjectProperty<Reader> inputReaderProperty;
     private final ObjectProperty<Reader> errorReaderProperty;
     private final ObjectProperty<Writer> outputWriterProperty;
+    private WebView shellWindow;
 //    private final LinkedBlockingQueue<String> commandQueue;
 
     public Shell(WebView webView) {
@@ -82,12 +79,12 @@ public class Shell {
         return (JSObject) getWebEngine().executeScript("t.io");
     }
 
-    public void setInputReaderProperty(Reader inputReaderProperty) {
-        this.inputReaderProperty.set(inputReaderProperty);
-    }
-
     public Reader getInputReaderProperty() {
         return inputReaderProperty.get();
+    }
+
+    public void setInputReaderProperty(Reader inputReaderProperty) {
+        this.inputReaderProperty.set(inputReaderProperty);
     }
 
     public ObjectProperty<Reader> inputReaderPropertyProperty() {
@@ -98,20 +95,20 @@ public class Shell {
         return errorReaderProperty.get();
     }
 
-    public ObjectProperty<Reader> errorReaderPropertyProperty() {
-        return errorReaderProperty;
-    }
-
     public void setErrorReaderProperty(Reader errorReaderProperty) {
         this.errorReaderProperty.set(errorReaderProperty);
     }
 
-    public void setOutputWriterProperty(Writer outputWriterProperty) {
-        this.outputWriterProperty.set(outputWriterProperty);
+    public ObjectProperty<Reader> errorReaderPropertyProperty() {
+        return errorReaderProperty;
     }
 
     public Writer getOutputWriterProperty() {
         return outputWriterProperty.get();
+    }
+
+    public void setOutputWriterProperty(Writer outputWriterProperty) {
+        this.outputWriterProperty.set(outputWriterProperty);
     }
 
     public ObjectProperty<Writer> outputWriterPropertyProperty() {

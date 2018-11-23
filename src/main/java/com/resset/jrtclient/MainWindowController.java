@@ -1,4 +1,4 @@
-package com.resset.jrt;
+package com.resset.jrtclient;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -19,6 +20,8 @@ public class MainWindowController {
     public MenuItem bashMenuItem;
     public MenuItem shMenuItem;
     public MenuItem zshMenuItem;
+    public TextField hostID;
+    public TextField hostPassword;
 
     private String selectedShell = "/bin/bash";
 
@@ -36,6 +39,13 @@ public class MainWindowController {
             selectShellMenu.setText(zshMenuItem.getText());
             selectedShell = "powershell.exe";
         });
+
+        getHostID();
+    }
+
+    private void getHostID() {
+        hostID.textProperty().setValue(IDGenerator.generateUUID().toString());
+        hostPassword.textProperty().setValue("ABCD");
     }
 
     public void createSession() {

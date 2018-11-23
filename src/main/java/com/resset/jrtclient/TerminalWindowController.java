@@ -1,11 +1,8 @@
-package com.resset.jrt;
+package com.resset.jrtclient;
 
-import com.sun.javafx.PlatformUtil;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import java.io.IOException;
 
 public class TerminalWindowController {
 
