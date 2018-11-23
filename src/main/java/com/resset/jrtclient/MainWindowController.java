@@ -1,5 +1,6 @@
 package com.resset.jrtclient;
 
+import com.resset.jrtclient.net.IDGenerator;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

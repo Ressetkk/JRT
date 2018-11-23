@@ -1,11 +1,10 @@
-package com.resset.jrtclient;
+package com.resset.jrtclient.shell;
 
 import com.google.common.base.Charsets;
 import com.pty4j.PtyProcess;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
 import java.io.*;
@@ -33,16 +32,12 @@ public class LocalShell implements Shell {
 
 
         inputReaderProperty.addListener((observable, oldValue, newValue) -> {
-            Thread thread = new Thread(() -> {
-                printStream(newValue);
-            });
+            Thread thread = new Thread(() -> printStream(newValue));
             thread.start();
         });
 
         errorReaderProperty.addListener((observable, oldValue, newValue) -> {
-            Thread thread = new Thread(() -> {
-                printStream(newValue);
-            });
+            Thread thread = new Thread(() -> printStream(newValue));
             thread.start();
         });
     }
