@@ -1,8 +1,8 @@
-package com.resset.jrtclient;
+package com.jrtclient.app;
 
-import com.resset.jrtclient.annotation.WebkitCall;
-import com.resset.jrtclient.shell.LocalShell;
-import com.resset.jrtclient.shell.Shell;
+import com.jrtclient.annotation.WebkitCall;
+import com.jrtclient.shell.LocalShell;
+import com.jrtclient.shell.Shell;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;

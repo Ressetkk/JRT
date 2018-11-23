@@ -1,4 +1,4 @@
-package com.resset.jrtclient.shell;
+package com.jrtclient.shell;
 
 import com.google.common.base.Charsets;
 import com.pty4j.PtyProcess;
@@ -22,7 +22,6 @@ public class LocalShell implements Shell {
     private final JSObject terminalIO;
 
     public LocalShell(JSObject io, String[] cmd) {
-//        super(webView);
         this.commands = cmd;
         this.inputReaderProperty = new SimpleObjectProperty<>();
         this.errorReaderProperty = new SimpleObjectProperty<>();

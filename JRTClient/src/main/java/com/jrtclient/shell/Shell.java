@@ -1,4 +1,4 @@
-package com.resset.jrtclient.shell;
+package com.jrtclient.shell;
 
 import java.io.IOException;
 

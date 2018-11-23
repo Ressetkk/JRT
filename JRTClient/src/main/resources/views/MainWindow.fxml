@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="292.0" prefWidth="569.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.resset.jrtclient.MainWindowController">
+<AnchorPane prefHeight="292.0" prefWidth="569.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jrtclient.app.MainWindowController">
    <children>
       <ImageView fitHeight="67.0" fitWidth="569.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="30.0" layoutY="14.0" stylesheets="@../css/bootstrap3.css" text="Label">

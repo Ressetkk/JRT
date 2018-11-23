@@ -1,4 +1,4 @@
-package com.resset.jrtclient.net;
+package com.jrtclient.net;
 import java.util.UUID;
 
 public final class IDGenerator {

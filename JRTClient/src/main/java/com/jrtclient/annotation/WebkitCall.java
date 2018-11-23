@@ -1,4 +1,4 @@
-package com.resset.jrtclient.annotation;
+package com.jrtclient.annotation;
 
 public @interface WebkitCall {
     String from() default "";
