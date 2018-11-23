@@ -3,19 +3,64 @@ package com.resset.jrtclient;
 import com.google.common.base.Charsets;
 import com.pty4j.PtyProcess;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LocalShell extends Shell {
+public class LocalShell implements Shell {
     private PtyProcess process;
     private final String[] commands;
 
-    public LocalShell(WebView webView, String[] cmd) {
-        super(webView);
+    private final ObjectProperty<Reader> inputReaderProperty;
+    private final ObjectProperty<Reader> errorReaderProperty;
+    private final ObjectProperty<Writer> outputWriterProperty;
+
+    private final JSObject terminalIO;
+
+    public LocalShell(JSObject io, String[] cmd) {
+//        super(webView);
         this.commands = cmd;
+        this.inputReaderProperty = new SimpleObjectProperty<>();
+        this.errorReaderProperty = new SimpleObjectProperty<>();
+        this.outputWriterProperty = new SimpleObjectProperty<>();
+        this.terminalIO = io;
+
+
+
+        inputReaderProperty.addListener((observable, oldValue, newValue) -> {
+            Thread thread = new Thread(() -> {
+                printStream(newValue);
+            });
+            thread.start();
+        });
+
+        errorReaderProperty.addListener((observable, oldValue, newValue) -> {
+            Thread thread = new Thread(() -> {
+                printStream(newValue);
+            });
+            thread.start();
+        });
+    }
+
+    protected void printStream(Reader bufferedReader) {
+        try {
+            int read;
+            final char[] buffer = new char[1024];
+
+            while((read = bufferedReader.read(buffer, 0, buffer.length)) != -1) {
+                final StringBuilder builder = new StringBuilder(read);
+                builder.append(buffer, 0, read);
+                Platform.runLater(() -> terminalIO.call("print", builder.toString()));
+            }
+
+        } catch(final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void command(String text) {
@@ -27,7 +72,6 @@ public class LocalShell extends Shell {
         }
     }
 
-    @Override
     public void onTerminalReady() {
         Platform.runLater(() -> {
             try {
@@ -49,17 +93,51 @@ public class LocalShell extends Shell {
         setOutputWriterProperty(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())));
     }
 
-    @Override
-
     // TODO it's a bit hardcoded. Safe shell closing is needed
     public void disconnect() {
         try {
             getOutputWriterProperty().close();
             getInputReaderProperty().close();
             getErrorReaderProperty().close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
         process.destroy();
+    }
+
+    public Reader getInputReaderProperty() {
+        return inputReaderProperty.get();
+    }
+
+    public ObjectProperty<Reader> inputReaderPropertyProperty() {
+        return inputReaderProperty;
+    }
+
+    public Reader getErrorReaderProperty() {
+        return errorReaderProperty.get();
+    }
+
+    public ObjectProperty<Reader> errorReaderPropertyProperty() {
+        return errorReaderProperty;
+    }
+
+    public Writer getOutputWriterProperty() {
+        return outputWriterProperty.get();
+    }
+
+    public ObjectProperty<Writer> outputWriterPropertyProperty() {
+        return outputWriterProperty;
+    }
+
+    public void setInputReaderProperty(Reader inputReaderProperty) {
+        this.inputReaderProperty.set(inputReaderProperty);
+    }
+
+    public void setErrorReaderProperty(Reader errorReaderProperty) {
+        this.errorReaderProperty.set(errorReaderProperty);
+    }
+
+    public void setOutputWriterProperty(Writer outputWriterProperty) {
+        this.outputWriterProperty.set(outputWriterProperty);
     }
 }

@@ -59,7 +59,7 @@ public class MainWindowController {
     private void createTerminalWindow () throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/TerminalWindow.fxml"));
         Stage terminalStage = new Stage();
-        loader.setController(new TerminalWindowController(
+        loader.setController(new ShellController(
                 terminalStage,
                 selectedShell)
         );
@@ -70,7 +70,7 @@ public class MainWindowController {
         terminalStage.initModality(Modality.APPLICATION_MODAL);
         terminalStage.setScene(terminalScene);
         terminalStage.setTitle("Terminal");
-        terminalStage.setResizable(false);
+//        terminalStage.setResizable(false);
 
         terminalStage.show();
     }
