@@ -15,7 +15,6 @@ public class Shell {
     private final ObjectProperty<Reader> errorReaderProperty;
     private final ObjectProperty<Writer> outputWriterProperty;
     private WebView shellWindow;
-//    private final LinkedBlockingQueue<String> commandQueue;
 
     public Shell(WebView webView) {
         // TODO We do not know to which OS we connect. Automatic shell choice based on remote OS is needed
@@ -50,6 +49,8 @@ public class Shell {
 
     }
 
+    // TODO create ability to resize terminal window on the fly
+
     protected void printStream(Reader bufferedReader) {
         try {
             int read;
@@ -58,7 +59,6 @@ public class Shell {
             while((read = bufferedReader.read(buffer, 0, buffer.length)) != -1) {
                 final StringBuilder builder = new StringBuilder(read);
                 builder.append(buffer, 0, read);
-//                print(builder.toString());
                 Platform.runLater(() -> getTerminalIO().call("print", builder.toString()));
             }
 
