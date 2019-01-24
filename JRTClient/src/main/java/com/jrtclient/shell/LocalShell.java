@@ -95,7 +95,6 @@ public class LocalShell implements Shell {
         process.setWinSize(new WinSize(columns, rows));
     }
 
-    // TODO it's a bit hardcoded. Safe shell closing is needed
     public void disconnect() {
         try {
             getOutputWriterProperty().close();

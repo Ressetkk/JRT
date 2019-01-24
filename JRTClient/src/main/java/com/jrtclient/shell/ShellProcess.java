@@ -2,6 +2,7 @@ package com.jrtclient.shell;
 
 import com.google.common.base.Charsets;
 import com.pty4j.PtyProcess;
+import com.pty4j.WinSize;
 import io.netty.channel.ChannelHandlerContext;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public class ShellProcess implements Shell {
     private PtyProcess process;
-    private final String[] commands = {"/bin/bash", "-i"};
+    private String[] commands = null;
     private ChannelHandlerContext ctx;
 
     private final ObjectProperty<Reader> inputReaderProperty;
@@ -20,6 +21,15 @@ public class ShellProcess implements Shell {
     private final ObjectProperty<Writer> outputWriterProperty;
 
     public ShellProcess(ChannelHandlerContext ctx) {
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if ((os.contains("mac")) || (os.contains("linux"))) {
+            this.commands = new String[] {"/bin/bash", "-i"};
+        }
+        else if (os.contains("win")) {
+            this.commands = new String[] {"powershell.exe", "" };
+        }
+
         this.inputReaderProperty = new SimpleObjectProperty<>();
         this.errorReaderProperty = new SimpleObjectProperty<>();
         this.outputWriterProperty = new SimpleObjectProperty<>();
@@ -64,7 +74,6 @@ public class ShellProcess implements Shell {
         try {
             int read;
             final char[] buffer = new char[1024];
-//            StringBuilder builder;
             
             while((read = bufferedReader.read(buffer, 0, buffer.length)) != -1) {
                 final StringBuilder builder = new StringBuilder(read);
@@ -79,12 +88,20 @@ public class ShellProcess implements Shell {
 
     @Override
     public void disconnect() {
+        try {
+            getOutputWriterProperty().close();
+            getInputReaderProperty().close();
+            getErrorReaderProperty().close();
+        } catch (IOException ignored) {
 
+        }
+        process.destroy();
     }
 
     @Override
     public void resizeShell(int columns, int rows) {
-
+        process.setWinSize(new WinSize(columns, rows));
+        System.out.printf("%dx%d", columns, rows);
     }
 
     public Reader getInputReaderProperty() {

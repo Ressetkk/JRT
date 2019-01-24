@@ -1,4 +1,4 @@
-rootProject.name = 'JRT'
+rootProject.name = 'JRT4'
 include 'JRTClient'
 include 'JRTServer'
 

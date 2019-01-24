@@ -13,6 +13,7 @@ public class IORedirect extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
         redirectChannel.writeAndFlush(msg);
     }
 }

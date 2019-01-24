@@ -27,10 +27,7 @@ public class MainWindowController {
 
     public Button connectButton;
     public Button localShell;
-    public MenuButton selectShellMenu;
-    public MenuItem bashMenuItem;
-    public MenuItem shMenuItem;
-    public MenuItem zshMenuItem;
+
     public TextField hostID;
     public TextField hostPassword;
     public TextField remoteID;
@@ -39,7 +36,7 @@ public class MainWindowController {
     public Circle connectDot;
     public Label connectLabel;
 
-    private String selectedShell = "/bin/bash";
+    private String[] commands = {"/bin/bash", "-i"};
 
     private Channel channel;
     private StringProperty connectedLabelText = new SimpleStringProperty("Not Connected");
@@ -52,19 +49,13 @@ public class MainWindowController {
         hostID.textProperty().bind(hostIdProperty);
         hostPassword.textProperty().bind(hostPasswordproperty.asString());
 
-        bashMenuItem.setOnAction(event -> {
-            selectShellMenu.setText(bashMenuItem.getText());
-            selectedShell = "/bin/bash";
-        });
-
-        shMenuItem.setOnAction(event -> {
-            selectShellMenu.setText(shMenuItem.getText());
-            selectedShell = "cmd.exe";
-        });
-        zshMenuItem.setOnAction(event -> {
-            selectShellMenu.setText(zshMenuItem.getText());
-            selectedShell = "powershell.exe";
-        });
+        String os = System.getProperty("os.name").toLowerCase();
+        if ((os.contains("mac")) || (os.contains("linux"))) {
+            this.commands = new String[] {"/bin/bash", "-i"};
+        }
+        else if (os.contains("win")) {
+            this.commands = new String[] {"powershell.exe", "" };
+        }
 
         initializeConnection();
     }
@@ -82,7 +73,7 @@ public class MainWindowController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/TerminalWindow.fxml"));
                 Stage terminalStage = new Stage();
-                loader.setController(new RemoteShellController(selectedShell, channel));
+                loader.setController(new RemoteShellController(commands, channel));
 
                 Parent terminalRoot = loader.load();
 
@@ -104,7 +95,7 @@ public class MainWindowController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/TerminalWindow.fxml"));
             Stage terminalStage = new Stage();
-            loader.setController(new LocalShellController(selectedShell));
+            loader.setController(new LocalShellController(commands));
 
             Parent terminalRoot = loader.load();
 

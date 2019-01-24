@@ -22,14 +22,10 @@ public class LocalShellController {
     private Shell shell;
     public WebView htermWindow;
 
-    public LocalShellController(String selectedShell) {
+    public LocalShellController(String[] commands) {
         this.clipboard = Clipboard.getSystemClipboard();
         this.clipboardContent = new ClipboardContent();
-        if ((selectedShell.equals("powershell.exe")) || (selectedShell.equals("cmd.exe"))) {
-            this.commands = new String[] {selectedShell, ""};
-        } else {
-            this.commands = new String[] {selectedShell, "-i"};
-        }
+        this.commands = commands;
     }
 
     public void initialize() {
@@ -67,7 +63,6 @@ public class LocalShellController {
     public void copyClipboard(String clipboard) {
             clipboardContent.put(DataFormat.PLAIN_TEXT, clipboard);
             this.clipboard.setContent(clipboardContent);
-//            System.out.printf("content: %s\n", clipboardContent.getString());
     }
 
     private JSObject getTerminalIO() {

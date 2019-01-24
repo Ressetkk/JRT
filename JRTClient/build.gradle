@@ -37,7 +37,7 @@ dependencies {
     compile "org.openjfx:javafx-web:11.0.1:$platform"
 }
 
-mainClassName = 'app.Main'
+mainClassName = 'com.jrtclient.app.Main'
 
 //setupBuilder {
 //    vendor = 'i-net software'
@@ -75,7 +75,7 @@ compileJava {
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'app.Main'
+        attributes 'Main-Class': 'com.jrtclient.app.Main'
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

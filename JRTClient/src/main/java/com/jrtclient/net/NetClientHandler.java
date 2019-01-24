@@ -18,7 +18,10 @@ public class NetClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println(msg);
+        // TODO:
+        //  this shit is fucked up. I need frame decoding/encoding
+        //  and fuck this String shit up
+
         String[] out = ((String) msg).split("\\|");
         if (out[0].equals("yourid")) {
             hostID.setValue(out[1]);

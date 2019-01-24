@@ -26,15 +26,11 @@ public class RemoteShellController {
 
     public WebView htermWindow;
 
-    public RemoteShellController(String selectedShell, Channel channel) {
+    public RemoteShellController(String[] commands, Channel channel) {
         this.channel = channel;
         this.clipboard = Clipboard.getSystemClipboard();
         this.clipboardContent = new ClipboardContent();
-        if ((selectedShell.equals("powershell.exe")) || (selectedShell.equals("cmd.exe"))) {
-            this.commands = new String[] {selectedShell, ""};
-        } else {
-            this.commands = new String[] {selectedShell, "-i"};
-        }
+        this.commands = commands;
     }
 
     public void initialize() {
@@ -45,13 +41,19 @@ public class RemoteShellController {
 
     @WebkitCall
     public void onTerminalReady() {
+
+        htermWindow.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
+            channel.writeAndFlush("disconnect");
+            channel.pipeline().remove("TerminalIncomingMessagesHandler");
+        });
+
         channel.pipeline().addBefore("mainLogic", "TerminalIncomingMessagesHandler", new TerminalIncomingMessagesHandler(getTerminalIO()));
         channel.writeAndFlush("terminalReady");
     }
 
     @WebkitCall(from = "hterm")
     public void onShellResize(int columns, int rows) {
-//        shell.resizeShell(columns, rows);
+        channel.writeAndFlush("resizeWindow|" + columns + "|" + rows + "|");
     }
 
     @WebkitCall (from = "hterm")
@@ -76,6 +78,4 @@ public class RemoteShellController {
     public JSObject getWindow() {
         return (JSObject) getWebEngine().executeScript("window");
     }
-
-
 }
