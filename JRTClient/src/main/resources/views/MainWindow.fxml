@@ -8,10 +8,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="292.0" prefWidth="569.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jrtclient.app.MainWindowController">
+<AnchorPane prefHeight="37.0" prefWidth="571.0" stylesheets="@../css/bootstrap3.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jrtclient.app.MainWindowController">
    <children>
       <ImageView fitHeight="67.0" fitWidth="569.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="30.0" layoutY="14.0" stylesheets="@../css/bootstrap3.css" text="Label">
@@ -19,9 +20,15 @@
             <Font size="34.0" />
          </font>
       </Label>
-      <AnchorPane layoutX="30.0" layoutY="82.0" AnchorPane.bottomAnchor="30.0">
+      <AnchorPane layoutX="1.0" layoutY="238.0" prefHeight="42.0" prefWidth="570.0">
          <children>
-            <Button fx:id="connectButton" layoutX="414.0" layoutY="101.5" minHeight="30.0" mnemonicParsing="false" onMouseClicked="#createSession" prefHeight="32.0" prefWidth="95.0" text="Connect">
+            <Circle fx:id="connectDot" fill="#ff9999" layoutX="36.0" layoutY="21.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <Label fx:id="connectLabel" layoutX="50.0" layoutY="13.0" text="No connection" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="32.0" layoutY="83.0">
+         <children>
+            <Button fx:id="connectButton" layoutX="414.0" layoutY="102.0" minHeight="30.0" mnemonicParsing="false" onMouseClicked="#createSession" prefHeight="32.0" prefWidth="95.0" text="Connect">
                <styleClass>
                   <String fx:value="button" />
                   <String fx:value="success" />
@@ -39,6 +46,7 @@
                   <MenuItem fx:id="zshMenuItem" text="zsh" />
                </items>
             </MenuButton>
+            <Button fx:id="localShell" layoutY="103.0" mnemonicParsing="false" onMouseClicked="#createLocalSession" styleClass="primary" text="Local Shell" />
          </children>
       </AnchorPane>
    </children>

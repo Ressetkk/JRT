@@ -2,57 +2,74 @@ package com.jrtclient.shell;
 
 import com.google.common.base.Charsets;
 import com.pty4j.PtyProcess;
-import com.pty4j.WinSize;
-import javafx.application.Platform;
+import io.netty.channel.ChannelHandlerContext;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import netscape.javascript.JSObject;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LocalShell implements Shell {
+public class ShellProcess implements Shell {
     private PtyProcess process;
-    private final String[] commands;
+    private final String[] commands = {"/bin/bash", "-i"};
+    private ChannelHandlerContext ctx;
 
     private final ObjectProperty<Reader> inputReaderProperty;
     private final ObjectProperty<Reader> errorReaderProperty;
     private final ObjectProperty<Writer> outputWriterProperty;
 
-    private final JSObject terminalIO;
-
-    public LocalShell(JSObject io, String[] cmd) {
-        this.commands = cmd;
+    public ShellProcess(ChannelHandlerContext ctx) {
         this.inputReaderProperty = new SimpleObjectProperty<>();
         this.errorReaderProperty = new SimpleObjectProperty<>();
         this.outputWriterProperty = new SimpleObjectProperty<>();
-        this.terminalIO = io;
-
-
+        this.ctx = ctx;
 
         inputReaderProperty.addListener((observable, oldValue, newValue) -> {
-            Thread thread = new Thread(() -> {
-                printStream(newValue);
-            });
+            Thread thread = new Thread(() -> read(newValue));
             thread.start();
         });
 
         errorReaderProperty.addListener((observable, oldValue, newValue) -> {
-            Thread thread = new Thread(() -> printStream(newValue));
+            Thread thread = new Thread(() -> read(newValue));
             thread.start();
         });
     }
 
-    private void printStream(Reader bufferedReader) {
+    @Override
+    public void initProcess() throws IOException {
+        Map<String, String> envs = new HashMap<>(System.getenv());
+        envs.remove("TERM_PROGRAM"); // for OS X
+        envs.put("TERM", "xterm");
+        process = PtyProcess.exec(commands, envs, System.getProperty("user.home"));
+
+        setInputReaderProperty(new BufferedReader(new InputStreamReader(process.getInputStream(), Charsets.UTF_8)));
+        setErrorReaderProperty(new BufferedReader(new InputStreamReader(process.getErrorStream(), Charsets.UTF_8)));
+        setOutputWriterProperty(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())));
+    }
+
+    @Override
+    public void command(String command) {
+        // this shit writes to my pty process
+        try {
+            getOutputWriterProperty().write(command);
+            getOutputWriterProperty().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void read(Reader bufferedReader) {
+        // this shit reads from my pty process
         try {
             int read;
             final char[] buffer = new char[1024];
-
+//            StringBuilder builder;
+            
             while((read = bufferedReader.read(buffer, 0, buffer.length)) != -1) {
                 final StringBuilder builder = new StringBuilder(read);
                 builder.append(buffer, 0, read);
-                Platform.runLater(() -> terminalIO.call("print", builder.toString()));
+                ctx.writeAndFlush(builder.toString());
             }
 
         } catch(final Exception e) {
@@ -60,51 +77,14 @@ public class LocalShell implements Shell {
         }
     }
 
-    public void command(String text) {
-        try {
-            getOutputWriterProperty().write(text);
-            getOutputWriterProperty().flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    @Override
+    public void disconnect() {
 
-    public void onTerminalReady() {
-        Platform.runLater(() -> {
-            try {
-                initProcess();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public void initProcess() throws IOException {
-        Map<String, String> envs = new HashMap<>(System.getenv());
-        envs.remove("TERM_PROGRAM"); // for OS X
-        envs.put("TERM", "xterm");
-        // TODO change directory regarding remote OS
-        this.process = PtyProcess.exec(commands, envs, System.getProperty("user.home"));
-        setInputReaderProperty(new BufferedReader(new InputStreamReader(process.getInputStream(), Charsets.UTF_8)));
-        setErrorReaderProperty(new BufferedReader(new InputStreamReader(process.getErrorStream(), Charsets.UTF_8)));
-        setOutputWriterProperty(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())));
     }
 
     @Override
     public void resizeShell(int columns, int rows) {
-        process.setWinSize(new WinSize(columns, rows));
-    }
 
-    // TODO it's a bit hardcoded. Safe shell closing is needed
-    public void disconnect() {
-        try {
-            getOutputWriterProperty().close();
-            getInputReaderProperty().close();
-            getErrorReaderProperty().close();
-        } catch (IOException ignored) {
-
-        }
-        process.destroy();
     }
 
     public Reader getInputReaderProperty() {

@@ -34,7 +34,7 @@
     function initHterm() {
         hterm.defaultStorage = new lib.Storage.Memory();
         hterm.copySelectionToClipboard = function (document) {
-            app.copy(document.getSelection().toString());
+            app.copyClipboard(document.getSelection().toString());
         };
         hterm.msg = function (name, args = [], string) {
             return string;
@@ -55,9 +55,9 @@
 
             io.sendString = io.onVTKeystroke;
 
-            // io.onTerminalResize = function (columns, rows) {
-            //     app.resizeTerminal(columns, rows);
-            // };
+            io.onTerminalResize = function (columns, rows) {
+                app.onShellResize(columns, rows);
+            };
 
             t.installKeyboard();
             app.onTerminalReady();
