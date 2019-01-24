@@ -27,8 +27,8 @@ public class HostShellHandler extends ChannelInboundHandlerAdapter {
             // commit suicide
             ctx.channel().pipeline().remove(this);
         }
-        else {
-            process.command((String) msg);
+        else if (out[0].equals("shellContent")){
+            process.command((String) out[1]);
         }
     }
 }

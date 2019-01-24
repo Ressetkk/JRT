@@ -1,9 +1,12 @@
 package com.jrtclient.net;
 
+import io.netty.channel.AddressedEnvelope;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
+
+import java.net.InetSocketAddress;
 
 
 public class NetClientHandler extends ChannelInboundHandlerAdapter {
@@ -18,9 +21,6 @@ public class NetClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        // TODO:
-        //  this shit is fucked up. I need frame decoding/encoding
-        //  and fuck this String shit up
 
         String[] out = ((String) msg).split("\\|");
         if (out[0].equals("yourid")) {

@@ -58,7 +58,7 @@ public class RemoteShellController {
 
     @WebkitCall (from = "hterm")
     public void command(String command) {
-        channel.writeAndFlush(command);
+        channel.writeAndFlush("shellContent|" + command);
     }
 
     @WebkitCall(from = "hterm")

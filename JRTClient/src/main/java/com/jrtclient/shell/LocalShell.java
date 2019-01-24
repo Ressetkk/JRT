@@ -83,7 +83,6 @@ public class LocalShell implements Shell {
         Map<String, String> envs = new HashMap<>(System.getenv());
         envs.remove("TERM_PROGRAM"); // for OS X
         envs.put("TERM", "xterm");
-        // TODO change directory regarding remote OS
         this.process = PtyProcess.exec(commands, envs, System.getProperty("user.home"));
         setInputReaderProperty(new BufferedReader(new InputStreamReader(process.getInputStream(), Charsets.UTF_8)));
         setErrorReaderProperty(new BufferedReader(new InputStreamReader(process.getErrorStream(), Charsets.UTF_8)));

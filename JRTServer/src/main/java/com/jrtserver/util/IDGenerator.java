@@ -15,7 +15,7 @@ public final class IDGenerator {
         }
     }
 
-    public void addReusableId(Integer id) {
+    public static void addReusableId(Integer id) {
         reusableIds.add(id);
     }
 }

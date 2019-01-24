@@ -10,30 +10,25 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JRTServerHandler extends ChannelInboundHandlerAdapter {
 
     private final ConcurrentHashMap<String, Channel> clientsMap;
+    private Integer id;
 
     public JRTServerHandler(ConcurrentHashMap<String, Channel> clientsMap) {
         this.clientsMap = clientsMap;
     }
 
     public void channelActive(ChannelHandlerContext ctx) {
-        Integer id = IDGenerator.nextId();      // Get next usable ID
+        id = IDGenerator.nextId();      // Get next usable ID
         System.out.println(id);
         clientsMap.put(id.toString(), ctx.channel());  // add the channel to the Hash Map of connected channels
 
         // write ID to the client
-//        final ByteBuf msg = ctx.alloc().buffer();
         String commandId = "yourid|"+id.toString();
-//        msg.write();
         ctx.writeAndFlush(commandId);
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-//        System.out.println("JRTServerHandler");
-        System.out.println((String) msg);
-//        for (byte m : ((String) msg).getBytes()) {
-//            System.out.printf("%02X | ",m);
-//        }
+
         if (((String) msg).contains("connect|")) {
             String[] out = ((String)msg).split("\\|");
             Channel redirectChannel = clientsMap.get(out[2]);
@@ -58,5 +53,11 @@ public class JRTServerHandler extends ChannelInboundHandlerAdapter {
         // Close the connection when an exception is raised.
         cause.printStackTrace();
         ctx.close();
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        clientsMap.remove(id);
+        IDGenerator.addReusableId(id);
     }
 }
