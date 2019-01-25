@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
@@ -36,7 +37,7 @@ public class MainWindowController {
     public Circle connectDot;
     public Label connectLabel;
 
-    private String[] commands = {"/bin/bash", "-i"};
+    private String[] commands;
 
     private Channel channel;
     private StringProperty connectedLabelText = new SimpleStringProperty("Not Connected");
@@ -45,10 +46,10 @@ public class MainWindowController {
     private BooleanProperty remoteAuth = new SimpleBooleanProperty(false);
 
     public void initialize() {
+
         connectLabel.textProperty().bind(connectedLabelText);
         hostID.textProperty().bind(hostIdProperty);
         hostPassword.textProperty().bind(hostPasswordproperty.asString());
-
         String os = System.getProperty("os.name").toLowerCase();
         if ((os.contains("mac")) || (os.contains("linux"))) {
             this.commands = new String[] {"/bin/bash", "-i"};
@@ -151,8 +152,14 @@ public class MainWindowController {
                 connectDot.setFill(Color.RED);
 
             }
+
+            @Override
+            protected void cancelled() {
+                channel.closeFuture();
+            }
         };
 
         new Thread(clientTask).start();
+
     }
 }

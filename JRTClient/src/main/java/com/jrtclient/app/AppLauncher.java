@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
+import javafx.stage.WindowEvent;
 
 
 public class AppLauncher extends Application {
@@ -21,6 +22,9 @@ public class AppLauncher extends Application {
         mainStage.setScene(mainScene);
         mainStage.setTitle("JRT");
         mainStage.setResizable(false);
+        mainScene.getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
+            System.exit(0);
+        });
         mainStage.show();
     }
 }
