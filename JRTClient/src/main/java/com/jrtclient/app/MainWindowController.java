@@ -9,6 +9,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -117,6 +120,11 @@ public class MainWindowController {
         Task<Channel> clientTask = new Task<Channel>() {
             @Override
             protected Channel call() throws Exception {
+                final String HOST = System.getProperty("host", "localhost");
+                final int PORT = Integer.parseInt(System.getProperty("port", "2137"));
+
+                final SslContext sslCtx = SslContextBuilder.forClient()
+                        .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
 
                 Bootstrap clientBoostrap = new Bootstrap();
                 clientBoostrap.group(workerGroup)
@@ -126,6 +134,7 @@ public class MainWindowController {
                             @Override
                             public void initChannel(SocketChannel ch) throws Exception {
                                 ch.pipeline()
+                                        .addLast(sslCtx.newHandler(ch.alloc(), HOST, PORT))
                                         .addLast(new StringDecoder())
                                         .addLast(new StringEncoder())
                                         .addLast("mainLogic", new NetClientHandler(hostIdProperty, remoteAuth));
@@ -133,7 +142,7 @@ public class MainWindowController {
                         });
                 connectedLabelText.setValue("Connecting...");
                 connectDot.setFill(Color.YELLOW);
-                ChannelFuture f = clientBoostrap.connect("localhost", 2137).sync();
+                ChannelFuture f = clientBoostrap.connect(HOST, PORT).sync();
                 return f.channel();
             }
 
