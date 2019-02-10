@@ -25,18 +25,17 @@ public class JRTChannelInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         if (sslCtx != null) {
-                ch.pipeline()
-                        .addLast(sslCtx.newHandler(ch.alloc()))
-                        .addLast(new StringDecoder())
-                        .addLast(new StringEncoder())
-                        .addLast("mainLogic", new JRTServerHandler(clientsMap));
-            } else {
-                ch.pipeline()
-                        .addLast(new StringDecoder())
-                        .addLast(new StringEncoder())
-                        .addLast("mainLogic", new JRTServerHandler(clientsMap));
-            }
+            ch.pipeline()
+                    .addLast(sslCtx.newHandler(ch.alloc()))
+                    .addLast(new StringDecoder())
+                    .addLast(new StringEncoder())
+                    .addLast("mainLogic", new JRTServerHandler(clientsMap));
+        } else {
+            ch.pipeline()
+                    .addLast(new StringDecoder())
+                    .addLast(new StringEncoder())
+                    .addLast("mainLogic", new JRTServerHandler(clientsMap));
         }
-
+    }
 
 }

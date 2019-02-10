@@ -21,16 +21,6 @@
 <script src="hterm_all.js"></script>
 <script>
 
-    // function updatePrefs(prefs) {
-    //     var prefsObject = JSON.parse(prefs);
-    //     for (var key in prefsObject) {
-    //         var value = prefsObject[key];
-    //         if (window.t) {
-    //             t.getPrefs().set(key, value);
-    //         }
-    //     }
-    // }
-
     function initHterm() {
         hterm.defaultStorage = new lib.Storage.Memory();
         hterm.copySelectionToClipboard = function (document) {
@@ -43,7 +33,6 @@
         t.getPrefs().set("send-encoding", "raw");
         t.getPrefs().set("receive-encoding", "utf-8");
 
-        // updatePrefs(app.getPrefs());
 
         t.onTerminalReady = function () {
 

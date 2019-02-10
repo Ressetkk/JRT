@@ -16,7 +16,8 @@ public class JRTServerHandler extends ChannelInboundHandlerAdapter {
         this.clientsMap = clientsMap;
     }
 
-    public void channelActive(ChannelHandlerContext ctx) {
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) {
         id = IDGenerator.nextId();      // Get next usable ID
         System.out.println(id);
         clientsMap.put(id.toString(), ctx.channel());  // add the channel to the Hash Map of connected channels

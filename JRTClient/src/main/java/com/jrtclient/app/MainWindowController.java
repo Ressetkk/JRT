@@ -66,11 +66,6 @@ public class MainWindowController {
 
 
     public void createSession() {
-        /* TODO better textfield validation
-                We need to validate inputs to prevent
-                - connecting to itself
-                - sending letters than numbers
-        */
         if ((!remoteID.getText().isBlank()) && (!remotePassword.getText().isBlank())) {
             channel.writeAndFlush("connect|" + hostID.getText() + "|" + remoteID.getText() + "|" + remotePassword.getText());
 
@@ -90,8 +85,6 @@ public class MainWindowController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("xDDDD");
         }
     }
 
