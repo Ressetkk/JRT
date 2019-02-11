@@ -1,6 +1,5 @@
 package com.jrtclient.shell;
 
-import com.google.common.base.Charsets;
 import com.pty4j.PtyProcess;
 import com.pty4j.WinSize;
 import io.netty.channel.ChannelHandlerContext;
@@ -53,8 +52,8 @@ public class ShellProcess implements Shell {
         envs.put("TERM", "xterm");
         process = PtyProcess.exec(commands, envs, System.getProperty("user.home"));
 
-        setInputReaderProperty(new BufferedReader(new InputStreamReader(process.getInputStream(), Charsets.UTF_8)));
-        setErrorReaderProperty(new BufferedReader(new InputStreamReader(process.getErrorStream(), Charsets.UTF_8)));
+        setInputReaderProperty(new BufferedReader(new InputStreamReader(process.getInputStream())));
+        setErrorReaderProperty(new BufferedReader(new InputStreamReader(process.getErrorStream())));
         setOutputWriterProperty(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())));
     }
 
