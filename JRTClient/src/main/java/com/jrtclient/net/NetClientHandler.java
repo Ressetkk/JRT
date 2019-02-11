@@ -24,6 +24,7 @@ public class NetClientHandler extends ChannelInboundHandlerAdapter {
 
         String[] out = ((String) msg).split("\\|");
         if (out[0].equals("yourid")) {
+            AuthHelper.setId(out[1]);
             hostID.setValue(out[1]);
         }
         else if (out[0].equals("connect")) {
